@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-runtime
+FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-devel
 
 WORKDIR /app
 
@@ -8,6 +8,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/SkyworkAI/SkyReels-V3 /app/SkyReels-V3
 
+# Install flash-attn first (needs CUDA compiler)
+RUN pip install --no-cache-dir flash-attn --no-build-isolation
+
+# Install remaining deps
 RUN pip install --no-cache-dir -r /app/SkyReels-V3/requirements.txt
 RUN pip install --no-cache-dir runpod
 
