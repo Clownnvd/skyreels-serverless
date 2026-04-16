@@ -8,11 +8,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/SkyworkAI/SkyReels-V3 /app/SkyReels-V3
 
-# Uninstall broken flash-attn, then rebuild from source
-RUN pip uninstall -y flash-attn flash-attn-2-cuda 2>/dev/null; \
-    pip install --no-cache-dir -r /app/SkyReels-V3/requirements.txt --ignore-installed flash-attn 2>/dev/null || true
+# Install deps (skip flash-attn from requirements)
+RUN pip install --no-cache-dir $(grep -vi flash /app/SkyReels-V3/requirements.txt) || true
 
-RUN pip install --no-cache-dir flash-attn --no-build-isolation --force-reinstall
+# Fix psutil then install flash-attn with pre-built wheel for PyTorch 2.4 + CUDA 12.4
+RUN pip install --no-cache-dir psutil --force-reinstall && \
+    pip install --no-cache-dir flash-attn==2.6.3 --no-build-isolation
 
 RUN pip install --no-cache-dir runpod
 
