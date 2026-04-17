@@ -11,9 +11,10 @@ RUN git clone https://github.com/SkyworkAI/SkyReels-V3 /app/SkyReels-V3
 # Install deps (skip flash-attn from requirements)
 RUN pip install --no-cache-dir $(grep -vi flash /app/SkyReels-V3/requirements.txt) || true
 
-# Fix psutil then install flash-attn with pre-built wheel for PyTorch 2.4 + CUDA 12.4
+# Install missing deps + fix flash-attn
 RUN pip install --no-cache-dir psutil --force-reinstall && \
-    pip install --no-cache-dir flash-attn==2.6.3 --no-build-isolation
+    pip install --no-cache-dir flash-attn==2.6.3 --no-build-isolation && \
+    pip install --no-cache-dir av
 
 RUN pip install --no-cache-dir runpod
 
