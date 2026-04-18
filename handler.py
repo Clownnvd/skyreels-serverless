@@ -39,7 +39,7 @@ def handler(job):
             "--seed", str(seed),
         ]
 
-        if job_input.get("low_vram", False):
+        if job_input.get("low_vram", True):
             cmd.append("--low_vram")
         if job_input.get("offload", True):
             cmd.append("--offload")
